@@ -1,10 +1,7 @@
 from re import match
 
-from src.constants import (
-    DEFAULT_ERROR_CODE_CLIENT,
-    DEFAULT_ERROR_CODE_SERVER,
-    ERRORS_LOOKUP,
-)
+from src.constants import (DEFAULT_ERROR_CODE_CLIENT,
+                           DEFAULT_ERROR_CODE_SERVER, ERRORS_LOOKUP)
 
 
 def get_error_code(status_code: int, error: str) -> int:

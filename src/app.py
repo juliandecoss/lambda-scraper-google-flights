@@ -2,7 +2,7 @@ from json import loads
 from time import time_ns
 from traceback import print_exc
 
-from src.constants import DEFAULT_SERVER_ERROR_MESSAGE, HTTP_VERB_GET, HTTP_VERB_POST
+from src.constants import (DEFAULT_SERVER_ERROR_MESSAGE, HTTP_VERB_GET)
 from src.services.exceptions import LambdaException
 from src.services.request import Request
 from src.services.response import Response

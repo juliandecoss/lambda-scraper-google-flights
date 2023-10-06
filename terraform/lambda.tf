@@ -1,17 +1,12 @@
-resource "aws_lambda_function" "lambda-name" {
-  function_name = "my-lambda-name"
+resource "aws_lambda_function" "google-scraper" {
+  function_name = var.lambda_name
 
   # The bucket name as created earlier with "aws s3api create-bucket"
   s3_bucket = var.s3_bucket
-  s3_key    = "${var.lambda_name}/v${var.app_version}/lambda-go.zip"
+  s3_key    = "${var.lambda_name}/v${var.app_version}/lambda-python.zip"
 
-  # "main" is the filename within the zip file (main.js) and "handler"
-  # is the name of the property under which the handler function was
-  # exported in that file.
-  handler = "main"
-  runtime = "go1.x"
-  #handler       = "index.handler"
-  #runtime       = "python3.8"
+  handler = "index.handler"
+  runtime = "python3.11"
   #versioning    = true
   memory_size   = 128
   #timeout       = 600
@@ -26,10 +21,8 @@ resource "aws_lambda_function" "lambda-name" {
 
 }
 
-# IAM role which dictates what other AWS services the Lambda function
-# may access.
 resource "aws_iam_role" "lambda_exec" {
-  name = "lambda-name-policy"
+  name = "google-scraper-role"
 
   assume_role_policy = <<EOF
 {
@@ -49,7 +42,7 @@ EOF
 
 # Política adicional para permitir escritura en CloudWatch Logs
   inline_policy {
-    name = "lambda-name-cloudwatch-logs-policy"
+    name = "google-scraper-cloudwatch-logs-policy"
 
     policy = jsonencode({
       Version = "2012-10-17",
@@ -71,16 +64,16 @@ EOF
 resource "aws_lambda_permission" "apigw" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.lambda-name.function_name
+  function_name = aws_lambda_function.google-scraper.function_name
   principal     = "apigateway.amazonaws.com"
 
   # The /*/* portion grants access from any method on any resource
   # within the API Gateway "REST API".
-  source_arn = "${aws_api_gateway_rest_api.lambda_name.execution_arn}/*/*"
+  source_arn = "${aws_api_gateway_rest_api.google_scraper.execution_arn}/*/*"
 }
 
 resource "aws_cloudwatch_log_group" "log_group" {
-  name              = "/aws/lambda/${aws_lambda_function.lambda-name.function_name}"
+  name              = "/aws/lambda/${aws_lambda_function.google-scraper.function_name}"
   retention_in_days = var.retention_in_days
 }
 

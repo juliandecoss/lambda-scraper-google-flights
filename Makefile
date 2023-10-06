@@ -1,3 +1,6 @@
+SHELL=/bin/bash
+PATH := .venv/bin:$(PATH)
+
 .PHONY: build
 build:
 	@./scripts/2_build_zip_upload.sh
@@ -47,9 +50,9 @@ build-package:
 	@cp -r ./requirements ./temporary_directory/;
 	@cp -r  ./src ./temporary_directory/;
 	@cp ./requirements.txt ./index.py ./temporary_directory/;
-	@(cd ./temporary_directory && zip -r event-platform-api.zip ./*);
+	@(cd ./temporary_directory && zip -r google-scraper.zip ./*);
 	@if [ -d ./terraform/build/requirements ]; then rm -r ./terraform/build/requirements; fi;
-	@mv ./requirements ./temporary_directory/event-platform-api.zip ./terraform/build/;
+	@mv ./requirements ./temporary_directory/google-scraper.zip ./terraform/build/;
 	@rm -r ./temporary_directory;
 	@rm -rf ./terraform/build/requirements
 
